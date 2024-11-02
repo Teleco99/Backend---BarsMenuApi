@@ -19,3 +19,7 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+.ftpquota
+.htaccess
+error_log
+public/error_log
