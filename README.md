@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## Acerca de la API de Cartas Digitales para Bares
+## API de Cartas Digitales para Bares
 
 Esta API está diseñada para permitir la creación y edición de cartas digitales para bares, ofreciendo una experiencia fluida y eficiente. Algunos de los aspectos destacados de esta API incluyen:
 
@@ -17,6 +17,8 @@ Esta API está diseñada para permitir la creación y edición de cartas digital
 
 La API está construida sobre el framework Laravel, que ofrece una sintaxis expresiva y elegante, facilitando el desarrollo y la gestión de proyectos web complejos.
 
-## Licencia
+## Próximas Mejoras
 
-La API está bajo la licencia de software de código abierto MIT. Puedes consultar más sobre la licencia [aquí](https://opensource.org/licenses/MIT).
+- **Nuevo Campo para Indicar si el Producto Tiene Imagen**: Añadir un campo booleano en la base de datos para cada producto, indicando si tiene una imagen asociada. Esto permitirá realizar peticiones de descarga de imágenes solo cuando sea necesario, optimizando el uso de recursos del servidor.
+- **Reestructuración de Relaciones entre Producto, Menú y Administrador**: Modificar las relaciones entre las entidades para una mayor coherencia y precisión en la base de datos, asegurando que cada producto se asocie correctamente con un administrador y el menú correspondiente.
+
