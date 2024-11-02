@@ -27,14 +27,14 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|string',
+            'description' => 'string',
+            'price' => 'string',
             'allergens' => 'array', 
         ]);
 
         $product = Product::create($request->all());
 
-        return new ProductResource($product);
+        return response()->json($product, 201);
     }
 
     /**
@@ -49,7 +49,7 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
 
-        return new ProductResource($product);
+        return response()->json($product, 200);
     }
 
     /**
@@ -65,18 +65,18 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
-            'image' => 'sometimes|string',
+            'price' => 'sometimes|string',
             'allergens' => 'sometimes|array',
         ]);
 
         $product->update([
             'name' => $request->name ?? $product->name,
             'description' => $request->description ?? $product->description,
-            'image' => $request->image ?? $product->image,
+            'price' => $request->price ?? $product->price,
             'allergens' => $request->allergens ?? $product->allergens,
         ]);
         
-        return response()->json($product);
+        return response()->json($product, 200);
     }
 
     /**
@@ -91,6 +91,6 @@ class ProductController extends Controller
 
         $product->delete();
         
-        return response()->json(null);
+        return response()->json(null, 204);
     }
 }

@@ -36,10 +36,10 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::apiResource('/menus', MenuController::class);
 
     // Rutas de Imagen
-    Route::post('/get-images', [ImageController::class, 'getUserImages']);
-    Route::post('/upload-image', [ImageController::class, 'upload']);
-	Route::get('/download-image/{userId}/{imageName}', [ImageController::class, 'download']);
+    Route::get('/image/{idProduct}', [ImageController::class, 'getUserImage']);
+    Route::post('/image', [ImageController::class, 'uploadImage']);
 });
+
 
 
 

@@ -36,16 +36,18 @@ class MenuController extends Controller
             'name' => $request->name,
         ]);
 
-        // Asociamos los productos si están presentes
-        if ($request->has('products')) {
-            $menu->products()->sync($request->products); 
-        }
-
-        // Creamos una nueva asociación para el menu y para sus productos
+        // Asociamos admin con menu
         $admin = Admin::findOrFail(Auth::id());
         $admin->menus()->attach($menu->id);
-        $admin->products()->attach($request->products);
-        return new MenuResource($menu);
+
+        // Asociamos los producto si están presentes
+        if ($request->has('products')) {
+            // Asociamos con su menu y admin
+            $menu->products()->sync($request->products); 
+            $admin->products()->attach($request->products);
+        }
+        
+        return response()->json($menu, 201);
     }
 
     /**
@@ -60,7 +62,7 @@ class MenuController extends Controller
 
         $menu = Menu::findOrFail($id);
 
-        return new MenuResource($menu);
+        return response()->json($menu, 200);
     }
 
     /**
@@ -88,7 +90,7 @@ class MenuController extends Controller
             $menu->products()->sync($request->products);  // Actualiza las relaciones
         }
 
-        return new MenuResource($menu);
+        return response()->json($menu, 200);
     }
 
     /**
@@ -100,10 +102,13 @@ class MenuController extends Controller
         if (!Admin::findOrFail(Auth::id())->menus()->where('id', $menu->id)->exists()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
+        
+        // Elimina los productos del menu
+        $menu->products()->delete();
 
         // Elimina el menu (y las asociaciones de productos a este menu)
         $menu->delete();
 
-        return response()->json(null);
+        return response()->json(null, 204);
     }
 }

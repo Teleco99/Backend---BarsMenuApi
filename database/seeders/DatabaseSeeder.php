@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
         ]);
 
-        $admin = User::create([
+        $user = User::create([
             'name' => 'adminUser',
             'password' => 'test',
             'email' => 'test@test.com',
@@ -34,42 +34,42 @@ class DatabaseSeeder extends Seeder
         Product::create([
             'name' => 'Pizza Margherita',
             'description' => 'Tomato, mozzarella, and basil.',
-            'image' => 'pizza.jpg',
+            'price' => '11',
             'allergens' => ['gluten', 'lactose'],
         ]);
 
         Product::create([
             'name' => 'Cheeseburger',
             'description' => 'Beef patty, cheese, lettuce, and tomato.',
-            'image' => 'burger.jpg',
+            'price' => '13.69',
             'allergens' => ['gluten', 'lactose'],
         ]);
 
         Product::create([
             'name' => 'Caesar Salad',
             'description' => 'Romaine lettuce, croutons, and Caesar dressing.',
-            'image' => 'salad.jpg',
+            'price' => '8.3',
             'allergens' => ['egg', 'gluten'],
         ]);
 
         Product::create([
             'name' => 'Tacos de Pollo',
             'description' => 'Tortilla de maíz rellena de pollo asado, salsa picante y cebolla.',
-            'image' => 'tacos.jpg',
+            'price' => '9',
             'allergens' => ['gluten'],
         ]);
 
         Product::create([
             'name' => 'Sopa de Tomate',
             'description' => 'Sopa cremosa de tomate con un toque de albahaca fresca.',
-            'image' => 'soup.jpg',
+            'price' => '7',
             'allergens' => ['lactosa'],
         ]);
 
         Product::create([
             'name' => 'Mazamorra',
             'description' => 'Crema de almendras con uvas cortadas por la mitad.',
-            'image' => 'mazamorra.jpg',
+            'price' => '6.66',
             'allergens' => ['lactosa'],
         ]);
 
@@ -86,8 +86,8 @@ class DatabaseSeeder extends Seeder
         $menu2->products()->sync([1, 2, 3]);
 
         // Asociamos menus a usuarios
-        $admin = Admin::findOrFail($admin->id)
+        $admin = Admin::findOrFail($user->id);
         $admin->menus()->sync($menu1->id);
-        $admin->products->sync([4, 5, 6]);
+        $admin->products()->sync([4, 5, 6]);
     }
 }
