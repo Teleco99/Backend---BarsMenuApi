@@ -12,6 +12,7 @@ class AuthController extends Controller
     // Registro de usuarios
     public function register(Request $request)
     {
+        /*
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -26,37 +27,48 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token');
 
-        return ['token' => $token->plainTextToken];
+        return ['token' => $token->plainTextToken];*/
+        return ['message' => 'acceso denegado'];
     }
 
-    // Inicio de sesión
+    // Inicio de sesión de usuarios admin
     public function login(Request $request)
     {
         // Validar datos del formulario
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        // Intentar login
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        // Intentar login de usuario admin
+        if (!Auth::guard('admin')->attempt($credentials)) {
             return ['message' => 'Invalid login credentials'];
         }
 
-        // Obtener usuario
-        $user = Auth::user();
+        // Obtener admin
+        $admin = Auth::guard('admin')->user();
 
         // Crear token de sesión
-        $token = $user->createToken('auth_token');
+        $token = $admin->createToken('admin_token', ['admin']);
 
-        return ['token' => $token->plainTextToken];
+        return [
+            'token' => $token->plainTextToken,
+            'idAdmin' => $admin->id
+        ];
     }
 
     // Cerrar sesión 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        // Obtener admin
+        $admin = Auth::user();
+        
+        // Borrar tokens
+        $admin->tokens()->delete();
 
-        return ['token' => 'deleted'];
+        return [
+            'token' => 'deleted',
+            'idAdmin' => $admin->id        
+        ];
     }
 }

@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+
 class Admin extends User
 {
-	// Los Admins usan la tabla de usuarios
-	protected $table = 'users';
-
-    public function menus()
+    // Relación oneToMany admin->menu
+    public function menus(): HasMany
     {
-        return $this->belongsToMany(Menu::class, 'admin_menu');
+        return $this->hasMany(Menu::class);
     }
 
-    public function products()
+    // Relación oneToMany admin->menu->product
+    public function products(): HasManyThrough
     {
-        return $this->belongsToMany(Product::class, 'admin_product');
+        return $this->hasManyThrough(Menu::class, Product::class);
     }
 }

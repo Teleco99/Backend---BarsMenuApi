@@ -25,8 +25,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        
+        // Siempre debe tener un admin_id para referenciar el producto
         $request->validate([
             'name' => 'required|string|max:255',
+            'admin_id' => 'required|integer|numeric',
+            'menu_id' => 'sometimes|required|integer|numeric',
             'description' => 'string',
             'price' => 'string',
             'allergens' => 'array', 
@@ -43,7 +47,7 @@ class ProductController extends Controller
     public function show($id)
     {
         // Verificar si el producto pertenece al admin autenticado
-        if (!$product->admins()->where('admin_id', Auth::id())->exists()) {
+        if (!$product->admin()->where('id', Auth::id())->exists()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -58,19 +62,23 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         // Verificar si el producto pertenece al admin autenticado
-        if (!$product->admins()->where('admin_id', Auth::id())->exists()) {
+        if (!$product->admin()->where('id', Auth::id())->exists()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
-            'price' => 'sometimes|string',
-            'allergens' => 'sometimes|array',
+            'name' => 'required|string|max:255',
+            'admin_id' => 'required|integer|numeric',
+            'menu_id' => 'sometimes|required|integer|numeric',
+            'description' => 'string',
+            'price' => 'string',
+            'allergens' => 'array',
         ]);
 
         $product->update([
             'name' => $request->name ?? $product->name,
+            'admin_id' => $request->admin_id ?? $product->admin_id,
+            'menu_id' => $request->menu_id ?? $product->menu_id,
             'description' => $request->description ?? $product->description,
             'price' => $request->price ?? $product->price,
             'allergens' => $request->allergens ?? $product->allergens,
@@ -85,7 +93,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         // Verificar si el producto pertenece al admin autenticado
-        if (!$product->admins()->where('admin_id', Auth::id())->exists()) {
+        if (!$product->admin()->where('id', Auth::id())->exists()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

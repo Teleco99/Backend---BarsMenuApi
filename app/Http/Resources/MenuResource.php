@@ -16,7 +16,9 @@ class MenuResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'idAdmin' => $this->idAdmin,
             'name' => $this->name,
+            'hasImage' => (bool) $this->hasImage,
             'products' => ProductResource::collection($this->products),
         ];
     }

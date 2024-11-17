@@ -21,58 +21,26 @@ class DatabaseSeeder extends Seeder
             'name' => 'userUser',
             'password' => 'password',
             'email' => 'test@example.com',
-            'role' => 'user',
         ]);
 
-        $user = User::create([
-            'name' => 'adminUser',
+        $admin = Admin::create([
+            'name' => 'admin',
             'password' => 'test',
             'email' => 'test@test.com',
-            'role' => 'admin',
         ]);
-
-        Product::create([
-            'name' => 'Pizza Margherita',
-            'description' => 'Tomato, mozzarella, and basil.',
-            'price' => '11',
-            'allergens' => ['gluten', 'lactose'],
+        
+        $admin2 = Admin::create([
+            'name' => 'admin',
+            'password' => 'jaqueMate17',
+            'email' => 'user1@test.com',
         ]);
-
-        Product::create([
-            'name' => 'Cheeseburger',
-            'description' => 'Beef patty, cheese, lettuce, and tomato.',
-            'price' => '13.69',
-            'allergens' => ['gluten', 'lactose'],
+        
+        $admin3 = Admin::create([
+            'name' => 'admin',
+            'password' => 'jaqueMate17',
+            'email' => 'user2@test.com',
         ]);
-
-        Product::create([
-            'name' => 'Caesar Salad',
-            'description' => 'Romaine lettuce, croutons, and Caesar dressing.',
-            'price' => '8.3',
-            'allergens' => ['egg', 'gluten'],
-        ]);
-
-        Product::create([
-            'name' => 'Tacos de Pollo',
-            'description' => 'Tortilla de maíz rellena de pollo asado, salsa picante y cebolla.',
-            'price' => '9',
-            'allergens' => ['gluten'],
-        ]);
-
-        Product::create([
-            'name' => 'Sopa de Tomate',
-            'description' => 'Sopa cremosa de tomate con un toque de albahaca fresca.',
-            'price' => '7',
-            'allergens' => ['lactosa'],
-        ]);
-
-        Product::create([
-            'name' => 'Mazamorra',
-            'description' => 'Crema de almendras con uvas cortadas por la mitad.',
-            'price' => '6.66',
-            'allergens' => ['lactosa'],
-        ]);
-
+        
         $menu1 = Menu::create([
             'name' => 'Menu Bar Antonio'
         ]);
@@ -80,14 +48,108 @@ class DatabaseSeeder extends Seeder
         $menu2 = Menu::create([
             'name' => 'Menu MCdonald'
         ]);
+        
+        $menu3 = Menu::create([
+            'name' => 'Menu Bar Antonio'
+        ]);
+
+        $menu4 = Menu::create([
+            'name' => 'Menu MCdonald'
+        ]);
+
+        $product1 = new Product([
+            'name' => 'Pizza Margherita',
+            'description' => 'Tomato, mozzarella, and basil.',
+            'price' => '11',
+            'allergens' => ['gluten', 'lactose'],
+        ]);
+
+        $product2 = new Product([
+            'name' => 'Cheeseburger',
+            'description' => 'Beef patty, cheese, lettuce, and tomato.',
+            'price' => '13.69',
+            'allergens' => ['gluten', 'lactose'],
+        ]);
+
+        $product3 = new Product([
+            'name' => 'Caesar Salad',
+            'description' => 'Romaine lettuce, croutons, and Caesar dressing.',
+            'price' => '8.3',
+            'allergens' => ['egg', 'gluten'],
+        ]);
+
+        $product4 = new Product([
+            'name' => 'Tacos de Pollo',
+            'description' => 'Tortilla de maíz rellena de pollo asado, salsa picante y cebolla.',
+            'price' => '9',
+            'allergens' => ['gluten'],
+        ]);
+
+        $product5 = new Product([
+            'name' => 'Sopa de Tomate',
+            'description' => 'Sopa cremosa de tomate con un toque de albahaca fresca.',
+            'price' => '7',
+            'allergens' => ['lactosa'],
+        ]);
+
+        $product6 = new Product([
+            'name' => 'Mazamorra',
+            'description' => 'Crema de almendras con uvas cortadas por la mitad.',
+            'price' => '6.66',
+            'allergens' => ['lactosa'],
+        ]);
+        
+        $product7 = new Product([
+            'name' => 'Pizza Margherita',
+            'description' => 'Tomato, mozzarella, and basil.',
+            'price' => '11',
+            'allergens' => ['gluten', 'lactose'],
+        ]);
+
+        $product8 = new Product([
+            'name' => 'Cheeseburger',
+            'description' => 'Beef patty, cheese, lettuce, and tomato.',
+            'price' => '13.69',
+            'allergens' => ['gluten', 'lactose'],
+        ]);
+
+        $product9 = new Product([
+            'name' => 'Caesar Salad',
+            'description' => 'Romaine lettuce, croutons, and Caesar dressing.',
+            'price' => '8.3',
+            'allergens' => ['egg', 'gluten'],
+        ]);
+
+        $product10 = new Product([
+            'name' => 'Tacos de Pollo',
+            'description' => 'Tortilla de maíz rellena de pollo asado, salsa picante y cebolla.',
+            'price' => '9',
+            'allergens' => ['gluten'],
+        ]);
+
+        $product11 = new Product([
+            'name' => 'Sopa de Tomate',
+            'description' => 'Sopa cremosa de tomate con un toque de albahaca fresca.',
+            'price' => '7',
+            'allergens' => ['lactosa'],
+        ]);
+
+        $product12 = new Product([
+            'name' => 'Mazamorra',
+            'description' => 'Crema de almendras con uvas cortadas por la mitad.',
+            'price' => '6.66',
+            'allergens' => ['lactosa'],
+        ]);
 
         // Asociamos los productos si están presentes
-        $menu1->products()->sync([4, 5, 6]);
-        $menu2->products()->sync([1, 2, 3]);
+        $menu1->products()->saveMany([$product1, $product2, $product3]);
+        $menu2->products()->saveMany([$product4, $product5, $product6]);
+        $menu3->products()->saveMany([$product7, $product8, $product9]);
+        $menu4->products()->saveMany([$product10, $product11, $product12]);
 
-        // Asociamos menus a usuarios
-        $admin = Admin::findOrFail($user->id);
-        $admin->menus()->sync($menu1->id);
-        $admin->products()->sync([4, 5, 6]);
+        // Asociamos menus a admin 
+        $admin->menus()->saveMany([$menu1, $menu2]);
+        $admin2->menus()->save($menu3);
+        $admin3->menus()->save($menu4);
     }
 }

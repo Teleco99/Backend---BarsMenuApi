@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
@@ -10,15 +11,11 @@ use Illuminate\Support\Facades\Response;
 
 class ImageController extends Controller
 {
-	// Obtener una imagen de un producto del admin autenticado
-    public function getUserImage(Request $request, $idProduct)
+	// Obtener una imagen de un producto dado su id y su id de admin
+    public function getUserImage($idAdmin, $model, $idModel)
     {
-        // Obtener el ID del admin autenticado
-        //$userId = Auth::id();
-        $userId = 2;
-
         // Ruta donde esta guardada la imagen
-        $imagePath = 'images/user/' . $userId . '/' . $idProduct . '.jpg';
+        $imagePath = "images/user/$idAdmin/$model/$idModel.jpg";
         
         if (Storage::exists($imagePath)) {
             // Obtener el contenido de la imagen
@@ -30,7 +27,7 @@ class ImageController extends Controller
             // Devolver la imagen con el encabezado adecuado
             return Response::make($file, 200, [
                 'Content-Type' => $mimeType,
-                'Content-Disposition' => 'inline; filename="' . $idProduct . '.jpg"'
+                'Content-Disposition' => 'inline; filename="' . $idModel . '.jpg"'
             ]);
         } else {
             return response()->json(['error' => 'Imagen no encontrada'], 404);
@@ -38,25 +35,25 @@ class ImageController extends Controller
     }
 
     // Cargar imagen en carpeta de usuario
-    public function uploadImage(Request $request)
+    public function uploadImage(Request $request, $model)
     {
         // Validación del archivo de imagen
         $request->validate([
-            'idProduct' => 'required|string',
+            'idModel' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Obtener el ID del admin autenticado
-        $userId = Auth::id();
+        $idAdmin = Auth::id();
 
         // Obtener la imagen cargada
         $image = $request->file('image');
 
         // Crear un nombre con la id del producto
-        $imageName = $request->idProduct . '.jpg';
+        $imageName = $request->idModel . '.jpg';
 
         // Ruta donde guardarás la imagen
-        $imagePath = 'images/user/' . $userId;
+        $imagePath = "images/user/$idAdmin/$model";
 
         // Crear la carpeta si no existe
         if (!file_exists($imagePath)) {
@@ -76,7 +73,41 @@ class ImageController extends Controller
         // Guardar la imagen en el almacenamiento con Laravel Storage
         $compressedImagePath = $imagePath . '/' . $imageName;
         Storage::put($compressedImagePath, $compressedImage);
+        
+        // Actualizar el campo 'hasImage' del producto en la base de datos
+        $product = Product::find($request->idModel);
+        if ($product) {
+            $product->hasImage = true;  
+            $product->save();
+        }
 
         return response()->json(['message' => 'Imagen subida y comprimida con éxito', 'imageName' => $imageName], 200);
+    }
+    
+    // Eliminar imagen de un producto del admin autenticado
+    public function deleteImage($model, $idModel)
+        {
+        // Obtener el ID del admin autenticado
+        $idAdmin = Auth::id();
+    
+        // Ruta donde está guardada la imagen
+        $imagePath = "images/user/$idAdmin/$model/$idModel.jpg";
+    
+        // Verificar si la imagen existe
+        if (Storage::exists($imagePath)) {
+            // Eliminar la imagen
+            Storage::delete($imagePath);
+            
+            // Actualizar el campo 'hasImage' del producto a false
+            $product = Product::find($idModel);
+            if ($product) {
+                $product->hasImage = false;   
+                $product->save();
+            }
+            
+            return response()->json(['message' => 'Imagen eliminada con éxito'], 200);
+        } else {
+            return response()->json(['error' => 'Imagen no encontrada'], 404);
+        }
     }
 }

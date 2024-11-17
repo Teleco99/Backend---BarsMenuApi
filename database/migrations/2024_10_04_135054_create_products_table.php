@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('menu_id')->nullable()->index();
             $table->string('name');
+            $table->boolean('hasImage')->default(false);
             $table->text('description')->nullable();
-            $table->string('price')->nullable(); // Ruta de la imagen
-            $table->json('allergens')->nullable(); // Alérgenos como JSON
+            $table->string('price')->nullable(); 
+            $table->json('allergens')->nullable(); 
             $table->timestamps();
         });
     }

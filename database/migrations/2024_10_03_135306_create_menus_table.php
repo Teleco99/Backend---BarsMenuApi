@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Nombre del menú
+            $table->foreignId('admin_id')->nullable()->index();
+            $table->string('name'); 
+            $table->boolean('hasImage')->default(false);
             $table->timestamps();
         });
     }

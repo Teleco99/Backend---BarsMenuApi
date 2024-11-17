@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Admin;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MenuResource;
@@ -11,14 +12,19 @@ use App\Http\Resources\MenuResource;
 class MenuController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra menus de un restaurante (dado el id de su admin)
      */
-    public function index()
+    public function index($idAdmin)
     {
-        // Obtiene solo los menús que pertenecen al admin autenticado
-        $menus = Admin::findOrFail(Auth::id())->menus()->get();
-        //var_dump($menus);
-        return MenuResource::collection($menus);
+        // Obtener admin 
+        $admin = Admin::findOrFail($idAdmin);
+        
+        // Obtiene solo los menús que pertenecen al admin
+        $menus = $admin->menus()->get();
+        
+        return response()->json([
+            'data' => MenuResource::collection($menus)
+        ]);
     }
 
     /**
@@ -32,22 +38,26 @@ class MenuController extends Controller
         ]);
 
         // Creamos el menú
-        $menu = Menu::create([
+        $menu = new Menu([
             'name' => $request->name,
         ]);
 
         // Asociamos admin con menu
         $admin = Admin::findOrFail(Auth::id());
-        $admin->menus()->attach($menu->id);
+        $admin->menus()->save($menu);
 
-        // Asociamos los producto si están presentes
+        // Asociamos el menu con los productos si están presentes
         if ($request->has('products')) {
-            // Asociamos con su menu y admin
-            $menu->products()->sync($request->products); 
-            $admin->products()->attach($request->products);
+            foreach ($request->products as $productData) {
+                // Rellena nuevo producto con datos
+                $product = new Product();
+                $product->fill(array_diff_key($productData, ['id' => '']));
+                
+                $menu->products()->save($product);
+            }
         }
         
-        return response()->json($menu, 201);
+        return new MenuResource($menu);
     }
 
     /**
@@ -62,7 +72,7 @@ class MenuController extends Controller
 
         $menu = Menu::findOrFail($id);
 
-        return response()->json($menu, 200);
+        return new MenuResource($menu);
     }
 
     /**
@@ -71,8 +81,8 @@ class MenuController extends Controller
     public function update(Request $request, Menu $menu)
     {
         $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'products' => 'sometimes|array', // Validar la entrada de productos
+            'name' => 'required|string|max:255',
+            'products' => 'array', // Validar la entrada de productos
         ]);
 
         // Verificar si el menú pertenece al admin autenticado
@@ -87,10 +97,23 @@ class MenuController extends Controller
 
         // Luego actualizamos los productos si están presentes
         if ($request->has('products')) {
-            $menu->products()->sync($request->products);  // Actualiza las relaciones
+            foreach ($request->products as $productData) {
+                // Comprobar si el producto tiene un ID (existe en la base de datos)
+                if (isset($productData['id'])) {
+                    // Si existe, lo buscamos y actualizamos
+                    $product = $menu->products()->find($productData['id']);
+                    if ($product) {
+                        $product->update(array_diff_key($productData, ['id' => '']));
+                    }
+                } else {
+                    // Si no tiene ID, es un producto nuevo
+                    $newProduct = new Product(array_diff_key($productData, ['id' => '']));
+                    $menu->products()->save($newProduct);
+                }
+            }
         }
-
-        return response()->json($menu, 200);
+        
+        return new MenuResource($menu);
     }
 
     /**

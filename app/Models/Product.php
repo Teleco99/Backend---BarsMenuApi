@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Product extends Model
 {
@@ -13,14 +14,16 @@ class Product extends Model
         'allergens' => 'array',
     ];
 
-    public function menus() : BelongsToMany
+    // Relación manyToOne menu->product
+    public function menu(): BelongsTo
     {
-        return $this->belongsToMany(Menu::class, 'menu_product');
+        return $this->belongsTo(Menu::class);
     }
 
-    // Relación inversa admin->product
-    public function admins() : BelongsToMany
+    // Relación manyToOne admin->menu->product
+    public function admin()
     {
-        return $this->belongsToMany(Admin::class, 'admin_product', 'product_id', 'admin_id');
+        return $this->menu ? $this->menu->admin : null;
+
     }
 }
