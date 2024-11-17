@@ -3,20 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Menu extends Model
 {
     protected $fillable = ['name'];
 
-    public function products() : BelongsToMany
+    // Relaci¨®n oneToMany menu->product
+    public function products(): hasMany
     {
-        return $this->belongsToMany(Product::class, 'menu_product');
+        return $this->hasMany(Product::class);
     }
 
-    // RelaciÃ³n inversa admin->menu
-    public function admins() : BelongsToMany
+    // Relaci¨®n manyToOne menu->admin
+    public function admin(): BelongsTo
     {
-        return $this->belongsToMany(Admin::class, 'admin_product', 'menu_id', 'admin_id');
+        return $this->belongsTo(Admin::class);
     }
 }

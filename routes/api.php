@@ -18,11 +18,15 @@ use App\Http\Middleware\CheckOwnerMiddleware;
 	DELETE /{id} -> delete
 */
 
+// Rutas publicas
+Route::get('/menus/{idAdmin}', [MenuController::class, 'index']);
+Route::get('/image/{idAdmin}/{model}/{idModel}', [ImageController::class, 'getUserImage']);
+
 // Rutas de Autenticación
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])
-	->middleware('auth:sanctum');
+	->middleware(['auth:sanctum', AdminMiddleware::class]);
 
 // Rutas de Usuario
 Route::apiResource('/users', UserController::class)
@@ -33,11 +37,11 @@ Route::apiResource('/users', UserController::class)
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
 	// Rutas de Menu y Product
     Route::apiResource('/products', ProductController::class)->except(['index']);
-    Route::apiResource('/menus', MenuController::class);
+    Route::apiResource('/menus', MenuController::class)->except(['index']);
 
     // Rutas de Imagen
-    Route::get('/image/{idProduct}', [ImageController::class, 'getUserImage']);
-    Route::post('/image', [ImageController::class, 'uploadImage']);
+    Route::post('/image/{model}', [ImageController::class, 'uploadImage']);
+    Route::delete('/image/{idModel}/{model}', [ImageController::class, 'deleteImage']);
 });
 
 

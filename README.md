@@ -9,16 +9,15 @@
 
 ## API de Cartas Digitales para Bares
 
-Esta API está diseñada para permitir la creación y edición de cartas digitales para bares, ofreciendo una experiencia fluida y eficiente. Algunos de los aspectos destacados de esta API incluyen:
+API construida con Laravel para permitir la creación y edición de cartas digitales para bares, ofreciendo un backend seguro y eficiente. Algunos de los aspectos destacados de esta API incluyen:
 
 - **Creación y Edición de Cartas**: Permite a los administradores crear y modificar cartas digitales de forma intuitiva.
 - **Soporte para Imágenes**: La API permite la carga y gestión de imágenes para productos, mejorando la presentación de las cartas.
 - **Autenticación con Token**: Implementa un sistema de autenticación basado en tokens, garantizando que solo los usuarios autorizados puedan realizar cambios en las cartas.
 
-La API está construida sobre el framework Laravel, que ofrece una sintaxis expresiva y elegante, facilitando el desarrollo y la gestión de proyectos web complejos.
+## Notas de versión
 
-## Próximas Mejoras
-
-- **Nuevo Campo para Indicar si el Producto Tiene Imagen**: Añadir un campo booleano en la base de datos para cada producto, indicando si tiene una imagen asociada. Esto permitirá realizar peticiones de descarga de imágenes solo cuando sea necesario, optimizando el uso de recursos del servidor.
-- **Reestructuración de Relaciones entre Producto, Menú y Administrador**: Modificar las relaciones entre las entidades para una mayor coherencia y precisión en la base de datos, asegurando que cada producto se asocie correctamente con un administrador y el menú correspondiente.
+- **Nuevo Campo para Indicar si el Producto Tiene Imagen**: Añadido campo booleano en la base de datos para cada producto, indicando si tiene una imagen asociada. Esto permitirá realizar peticiones de descarga de imágenes solo cuando sea necesario, optimizando el uso de recursos del servidor.
+- **Reestructuración de Relaciones entre Producto, Menú y Administrador**: Modificadas las relaciones entre las entidades para una mayor coherencia y precisión en la base de datos, asegurando que cada producto se asocie correctamente con un administrador y el menú correspondiente.
+- **Nueva función para eliminar la imagen de un producto**: Ahora cuando se elimina un producto, también se elimina su imagen del sistema de ficheros.
 

@@ -5,16 +5,21 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
+    # Manejar encabezado de autorización
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # Redirigir barras inclinadas finales si no es una carpeta
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
+    
+    # Redirigir archivos estáticos a /wasm
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*\.(js|css|wasm))$ /wasm/$1 [L]
 
-    # Send Requests To Front Controller...
+    # Enviar otras solicitudes al controlador frontal
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
@@ -25,3 +30,9 @@
   AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
 </IfModule>
 # php -- END cPanel-generated handler, do not edit
+
+# Añade el MIME a la cabecera de .wasm
+<IfModule mod_mime.c>
+    AddType application/wasm .wasm
+</IfModule>
+
